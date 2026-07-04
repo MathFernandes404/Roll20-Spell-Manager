@@ -18,7 +18,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       <header style={styles.header}>
         <div style={styles.headerContent}>
           <div style={styles.logoGroup}>
-            <span style={styles.logoIcon}>✦</span>
+            <img src="/logo.png" alt="Logo" style={styles.logoImg} />
             <h1 style={styles.title}>
               Roll20 <span style={styles.titleHighlight}>Spell Manager</span>
             </h1>
@@ -112,11 +112,11 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '0.75rem',
   },
-  logoIcon: {
-    color: 'var(--color-secondary)',
-    fontSize: '1.75rem',
-    fontWeight: 'bold',
-    textShadow: '0 0 10px hsl(38, 90%, 55%, 0.4)',
+  logoImg: {
+    width: '32px',
+    height: '32px',
+    borderRadius: '8px',
+    boxShadow: '0 0 10px rgba(233, 30, 99, 0.4)',
   },
   title: {
     fontSize: '1.5rem',
