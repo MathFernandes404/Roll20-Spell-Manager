@@ -96,6 +96,7 @@ export function exportToRoll20Character(character: Character): Roll20Character {
       'spelllevel',
       'spellsource',
       'spelldescription',
+      'spellathigherlevels',
       'spellcomp_v',
       'spellcomp_s',
       'spellcomp_m',
@@ -139,6 +140,7 @@ export function exportToRoll20Character(character: Character): Roll20Character {
     addAttribute('spelllevel', spell.level === 0 ? 'cantrip' : spell.level);
     addAttribute('spellsource', spell.source || '');
     addAttribute('spelldescription', spell.description || '');
+    addAttribute('spellathigherlevels', spell.higherLevel || '');
 
     // Add spell component fields
     const comps = spell.components || { v: false, s: false, m: false };

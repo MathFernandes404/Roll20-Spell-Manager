@@ -37,6 +37,7 @@ export const AddSpellModal: React.FC<AddSpellModalProps> = ({
   const [ritual, setRitual] = useState(false);
   const [prepared, setPrepared] = useState(false);
   const [description, setDescription] = useState('');
+  const [higherLevel, setHigherLevel] = useState('');
   const [source, setSource] = useState('Homebrew');
 
   // Search state
@@ -72,6 +73,7 @@ export const AddSpellModal: React.FC<AddSpellModalProps> = ({
       setRitual(editSpell.ritual);
       setPrepared(editSpell.prepared);
       setDescription(editSpell.description || '');
+      setHigherLevel(editSpell.higherLevel || '');
       setSource(editSpell.source || 'Custom');
       if (editSpell.edition) {
         setEdition(editSpell.edition);
@@ -170,6 +172,7 @@ export const AddSpellModal: React.FC<AddSpellModalProps> = ({
         ritual: spell.ritual,
         prepared: spell.level === 0, // cantrips start prepared
         description: spell.description,
+        higherLevel: spell.higherLevel,
         source: spell.source || '5etools',
         edition: spell.edition,
         components: spell.components,
@@ -193,13 +196,14 @@ export const AddSpellModal: React.FC<AddSpellModalProps> = ({
       ritual,
       prepared,
       description,
+      higherLevel,
       source,
       edition, // custom spells are created under current edition scope
       components: {
         v: compV,
         s: compS,
         m: compM,
-        material: compM ? compMaterialText : '',
+        material: compMaterialText,
       },
       alwaysPrepared: editSpell?.alwaysPrepared,
     };
@@ -224,6 +228,7 @@ export const AddSpellModal: React.FC<AddSpellModalProps> = ({
       ritual: spell.ritual,
       prepared: spell.level === 0, // cantrips start prepared
       description: spell.description,
+      higherLevel: spell.higherLevel,
       source: spell.source || '5etools',
       edition: spell.edition, // copy selected edition
       components: spell.components,
@@ -457,6 +462,11 @@ export const AddSpellModal: React.FC<AddSpellModalProps> = ({
                               </span>
                             </div>
                             <p style={styles.srdDesc}>{spell.description}</p>
+                            {spell.higherLevel && (
+                              <p style={{ ...styles.srdDesc, fontStyle: 'italic', marginTop: '4px' }}>
+                                <strong>At Higher Levels:</strong> {spell.higherLevel}
+                              </p>
+                            )}
                           </div>
                           <button
                             onClick={() => handleAddSrd(spell)}
@@ -694,6 +704,17 @@ export const AddSpellModal: React.FC<AddSpellModalProps> = ({
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Enter details of the spell's effects..."
+                  style={styles.textarea}
+                />
+              </div>
+
+              {/* At Higher Levels */}
+              <div style={styles.formGroup}>
+                <label style={styles.label}>At Higher Levels (Em Níveis Superiores)</label>
+                <textarea
+                  value={higherLevel}
+                  onChange={(e) => setHigherLevel(e.target.value)}
+                  placeholder="Enter details for casting at a higher level..."
                   style={styles.textarea}
                 />
               </div>

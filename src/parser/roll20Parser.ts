@@ -79,6 +79,9 @@ export function parseRoll20Character(json: Roll20Character): Character {
           case 'spelldescription':
             spellsMap[rowId].description = value;
             break;
+          case 'spellathigherlevels':
+            spellsMap[rowId].higherLevel = value;
+            break;
           case 'spellcomp_v':
             spellsMap[rowId].components = spellsMap[rowId].components || { v: false, s: false, m: false };
             spellsMap[rowId].components!.v = value === '{{v=1}}' || value === '1';
@@ -121,6 +124,7 @@ export function parseRoll20Character(json: Roll20Character): Character {
       // Cantrips are usually implicitly prepared, but we honor the parsed state or default to true for cantrips
       prepared: item.prepared ?? isCantrip,
       description: item.description || '',
+      higherLevel: item.higherLevel || '',
       source: item.source || '',
       components: item.components || { v: false, s: false, m: false },
       alwaysPrepared: !!item.alwaysPrepared,

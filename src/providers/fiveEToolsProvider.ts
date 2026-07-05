@@ -8,8 +8,10 @@ const SCHOOL_MAP: Record<string, string> = {
   A: 'abjuration',
   C: 'conjuration',
   D: 'divination',
+  E: 'enchantment',
   EN: 'enchantment',
   EV: 'evocation',
+  V: 'evocation',
   I: 'illusion',
   N: 'necromancy',
   T: 'transmutation',
@@ -139,6 +141,30 @@ function formatEntries(entries: any[]): string {
     .join('\n\n');
 }
 
+/**
+ * Formats 5etools entriesHigherLevel array into a clean string,
+ * removing the redundant outer wrapper title (e.g. "At Higher Levels" or "Using a Higher-Level Spell Slot").
+ */
+function formatHigherLevel(entries: any[]): string {
+  if (!entries || entries.length === 0) return '';
+  
+  const first = entries[0];
+  if (
+    first &&
+    typeof first === 'object' &&
+    first.type === 'entries' &&
+    first.name &&
+    (String(first.name).toLowerCase().includes('higher-level') ||
+     String(first.name).toLowerCase().includes('higher level') ||
+     String(first.name).toLowerCase().includes('at higher levels')) &&
+    Array.isArray(first.entries)
+  ) {
+    return formatEntries(first.entries);
+  }
+  
+  return formatEntries(entries);
+}
+
 export class FiveEToolsProvider implements SpellProvider {
   id: string;
   name: string;
@@ -184,6 +210,9 @@ export class FiveEToolsProvider implements SpellProvider {
         const fetchPromises: Promise<{ source: string; data: any } | null>[] = [];
 
         for (const source of targetSources) {
+          if (this.edition === '2024' && source.toUpperCase() === 'PHB') {
+            continue; // Ignore legacy PHB (2014) in the 2024 ruleset
+          }
           const fileName = indexMap[source];
           if (fileName) {
             fetchPromises.push(
@@ -211,7 +240,8 @@ export class FiveEToolsProvider implements SpellProvider {
               const { durationStr, concentration } = formatDuration(s.duration);
               
               // Extract class mappings using sources.json
-              const sourceKey = String(s.source || result.source || 'PHB').toUpperCase();
+              const defaultSource = this.edition === '2024' ? 'XPHB' : 'PHB';
+              const sourceKey = String(s.source || result.source || defaultSource).toUpperCase();
               const spellSourceMap = sourcesMap[sourceKey] || {};
               const spellClassData = spellSourceMap[s.name] || {};
               const classesList = (spellClassData.class || []).map((c: any) => c.name);
@@ -238,7 +268,8 @@ export class FiveEToolsProvider implements SpellProvider {
                 ritual: !!(s.meta && s.meta.ritual),
                 prepared: s.level === 0, // default cantrips to prepared
                 description: formatEntries(s.entries),
-                source: s.source || result.source || 'PHB',
+                higherLevel: formatHigherLevel(s.entriesHigherLevel),
+                source: s.source || result.source || defaultSource,
                 edition: this.edition,
                 classes: classesList.length > 0 ? classesList : undefined,
                 components: s.components ? {

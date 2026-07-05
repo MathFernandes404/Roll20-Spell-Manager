@@ -149,6 +149,12 @@ export const SpellCard: React.FC<SpellCardProps> = ({
           <p style={styles.descriptionText}>
             {spell.description || 'No description provided.'}
           </p>
+          {spell.higherLevel && (
+            <div style={{ marginTop: '0.75rem', borderTop: '1px solid var(--border-muted)', paddingTop: '0.75rem' }}>
+              <p style={{ ...styles.descriptionText, fontWeight: 'bold', marginBottom: '0.25rem' }}>Em Níveis Superiores:</p>
+              <p style={styles.descriptionText}>{spell.higherLevel}</p>
+            </div>
+          )}
         </div>
       )}
       

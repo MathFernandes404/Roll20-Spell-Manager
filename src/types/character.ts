@@ -12,6 +12,7 @@ export interface Spell {
   ritual: boolean;
   prepared: boolean;
   description?: string;
+  higherLevel?: string;  // Text details for upcasting (At Higher Levels / Using a Higher-Level Spell Slot)
   source?: string;       // e.g. "SRD", "5etools"
   edition?: '2014' | '2024'; // Separates legacy D&D 5e 2014 and modern 5e 2024
   classes?: string[];    // e.g. ["Wizard", "Sorcerer"]
